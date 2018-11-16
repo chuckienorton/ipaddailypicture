@@ -47,11 +47,12 @@ class Albums {
         let userAlbums = PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.album, subtype: PHAssetCollectionSubtype.any, options: userAlbumsOptions)
         
         // smart albums
-        let smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .albumRegular, options: nil) // Here you can specify Photostream, etc. as PHAssetCollectionSubtype.xxx
+        //let smartAlbums = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .albumRegular, options: nil) // Here you can specify Photostream, etc. as PHAssetCollectionSubtype.xxx
         
         
         // combine
-        let allAlbums = [userAlbums, smartAlbums]
+        //let allAlbums = [userAlbums, smartAlbums]
+        let allAlbums = [userAlbums]
         
         return allAlbums
         
@@ -71,8 +72,11 @@ class Albums {
                 let justImages = PHAsset.fetchAssets(in: album, options: optionsToFilterImage)
                 
                 let albumTitle = String(describing: album.localizedTitle ?? "")
+
+                let hasPhotoStreamInTitle = albumTitle.lowercased().range(of:"stream") != nil
                 
-                if justImages.count > 0 {
+                // ignore titles with 'photo stream' in them and make sure there is at least 1 image
+                if (justImages.count > 0) && !hasPhotoStreamInTitle {
                     self.albumTitles.append(albumTitle)
                 }
                 
@@ -287,8 +291,8 @@ class Albums {
             
             
         }
-        
-        
+        print("possibleImages.count")
+        print(possibleImages.count)
         
         return todaysImageAsset
         

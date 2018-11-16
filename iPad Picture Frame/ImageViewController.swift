@@ -219,7 +219,14 @@ class ImageViewController: UIViewController {
             options.deliveryMode = PHImageRequestOptionsDeliveryMode.opportunistic // will load twice for new images... first time will be degraded, second time for full size image
             options.isSynchronous = false // set to false if we later add a progress handler
             manager.requestImage(for: todaysImageAsset!, targetSize: CGSize(width: newWidth, height: newHeight), contentMode: .aspectFit, options: options, resultHandler: {(result, info)->Void in
-                self.imageView.image = result! // load results into image frame
+                // if we are good to go
+                if result != nil{
+                    self.imageView.image = result // load results into image frame
+                // else - reload and try again
+                } else {
+                    print("problem loading image. Trying again")
+                    self.loadImage(reset: true)
+                }
             })
             
             
